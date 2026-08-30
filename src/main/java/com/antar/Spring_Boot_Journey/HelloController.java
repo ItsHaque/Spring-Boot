@@ -20,4 +20,9 @@ public class HelloController {
     public String add(@RequestParam int a, @RequestParam int b){
         return " " + (a+b);
     }
+
+    @GetMapping("/greet-json/{name}")
+    public Greetings greetings(@PathVariable String name, @RequestParam int code){
+        return new Greetings("Greetings, " + name + "!", code);
+    }
 }
