@@ -78,4 +78,7 @@
  - Annotations = metadata Spring scans at startup to wire routing automatically, not executed code (same idea as @Override, different reader). 
  - Env issues hit & fixed: Maven Central 403'd due to a regional Cloudflare block (fixed via VPN); IntelliJ ignored pom.xml's Java version (fixed via "Delegate IDE build/run actions to Maven"); port 8080 conflicts from orphaned java.exe after using exec:exec (switched to spring-boot:run, which manages process lifecycle correctly). 
 
-
+## 2. Query params require explicit @RequestParam — mostly
+ - `@PathVariable` maps a {placeholder} in the URL path directly to a method parameter.
+ - `@RequestParam` maps a query string param (?a=5&b=6) to a parameter 
+ - annotate every param individually, don't rely on Spring's implicit fallback (it works for simple types like int/String when compiler -parameters flag is on, but it's fragile and non-obvious — always be explicit).
