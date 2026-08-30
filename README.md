@@ -82,3 +82,11 @@
  - `@PathVariable` maps a {placeholder} in the URL path directly to a method parameter.
  - `@RequestParam` maps a query string param (?a=5&b=6) to a parameter 
  - annotate every param individually, don't rely on Spring's implicit fallback (it works for simple types like int/String when compiler -parameters flag is on, but it's fragile and non-obvious — always be explicit).
+
+readme update
+
+## 3. Returning JSON objects (not just Strings)
+ - Jackson needs public getters (or public fields) to serialize a class — package-private fields with no getters silently produce empty/broken JSON. 
+ - Getter naming convention (getX()) is what Jackson uses via reflection to build key names — same "framework reads convention automatically" pattern as annotations. 
+ - JSON key order is not guaranteed and not meaningful — don't rely on it; consuming code reads by key name, not position.
+
