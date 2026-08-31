@@ -23,8 +23,8 @@ public class HelloController {
         return new Greetings("Greetings, " + name + "!", code);
     }
 
-    @PostMapping("/accounts")
-    public AccountRequest accountReq(@RequestBody AccountRequest accountRequest){
-        return accountRequest;
-    }
+//    @PostMapping("/accounts")
+//    public AccountRequest accountReq(@RequestBody AccountRequest accountRequest){
+//        return accountRequest;
+//    }
 }

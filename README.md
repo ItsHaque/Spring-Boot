@@ -89,3 +89,7 @@
  - Getter naming convention (getX()) is what Jackson uses via reflection to build key names — same "framework reads convention automatically" pattern as annotations. 
  - JSON key order is not guaranteed and not meaningful — don't rely on it; consuming code reads by key name, not position.
 
+## 4. POST requests with @RequestBody
+ - Serialization (Java → JSON) needs getters; deserialization (JSON → Java) needs a no-arg constructor + setters, or Jackson can't instantiate the object from raw JSON. Two different requirements, easy to conflate. 
+ - Tested via Postman: POST, raw/JSON body, Content-Type: application/json set automatically by the raw/JSON mode. 
+ - Confirmed full round-trip: JSON body → deserialized into AccountRequest → returned and re-serialized as JSON response.
