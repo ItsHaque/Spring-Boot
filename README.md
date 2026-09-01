@@ -93,3 +93,11 @@
  - Serialization (Java → JSON) needs getters; deserialization (JSON → Java) needs a no-arg constructor + setters, or Jackson can't instantiate the object from raw JSON. Two different requirements, easy to conflate. 
  - Tested via Postman: POST, raw/JSON body, Content-Type: application/json set automatically by the raw/JSON mode. 
  - Confirmed full round-trip: JSON body → deserialized into AccountRequest → returned and re-serialized as JSON response.
+
+### 5. Controller → Service → Repository, with real DI
+- Built a proper layered architecture: `AccountController` (HTTP layer) → `AccountServices` (business logic) → `AccountRepository` (in-memory storage).
+- **First attempt was wrong:** each method created its own `new AccountRepository()`/`new AccountServices()` — meant every request got a fresh, empty repository, so data never persisted. The fix: construct each dependency **once**, pass it in via constructor (constructor injection), store as a `final` field.
+- **Manual DI vs Spring DI:** wired constructors by hand first — genuinely hit the wall of "where do I even instantiate all of this once?", since there's only one true entry point (`SpringBootJourneyApplication.main()`), and hand-registering objects into Spring's routing system isn't practical.
+- **`@Service`/`@Repository`** solve this: they tell Spring "manage a single instance of this class." Spring inspects constructor parameters and auto-wires the whole chain (`Repository` → `Service` → `Controller`) at startup, before any request arrives. This is DI (Dependency Injection) — a class receives its dependencies from outside instead of creating them internally.
+- **Ambiguous mapping bug:** stale `POST /accounts` method left over in `HelloController` from Task 12 collided with the new `AccountController`'s mapping of the same path — Spring refused to start. Lesson: delete throwaway/prototype endpoints once a proper version exists elsewhere.
+- **Known shortcut, not yet fixed:** `findByAccountNumber` returns a fake `(-1, -1)` sentinel object for "not found," instead of throwing an exception or returning a proper 404 — still returns `200 OK` even when nothing was found. Revisit once covering proper error responses in REST APIs.
